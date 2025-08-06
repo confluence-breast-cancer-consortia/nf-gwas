@@ -52,8 +52,19 @@ class WorkflowMain {
         Nextflow.error("Parameter genotypes_association_format is required.")
     }
 
-    if(params["genotypes_array"] == null && params["genotypes_prediction"] == null && !params.regenie_skip_predictions ) {
-        Nextflow.error("Parameter genotypes_prediction is required.")
+    // Check for new individual file parameters first, then fall back to legacy options
+    def hasNewFormat = params["genotypes_prediction_bed"] != null && 
+                       params["genotypes_prediction_bim"] != null && 
+                       params["genotypes_prediction_fam"] != null
+    def hasLegacyFormat = params["genotypes_array"] != null || params["genotypes_prediction"] != null
+    
+    if(!hasNewFormat && !hasLegacyFormat && !params.regenie_skip_predictions ) {
+        Nextflow.error("Parameters genotypes_prediction_bed, genotypes_prediction_bim, and genotypes_prediction_fam are required (or use legacy genotypes_prediction parameter).")
+    }
+    
+    // Validate that all three files are provided if using new format
+    if((params["genotypes_prediction_bed"] != null || params["genotypes_prediction_bim"] != null || params["genotypes_prediction_fam"] != null) && !hasNewFormat) {
+        Nextflow.error("When using individual file parameters, all three must be provided: genotypes_prediction_bed, genotypes_prediction_bim, and genotypes_prediction_fam.")
     }
 
     if(params["covariates_filename"] != null && (params.covariates_columns.isEmpty() && params.covariates_cat_columns.isEmpty())) {

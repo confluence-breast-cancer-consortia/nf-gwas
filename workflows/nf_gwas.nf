@@ -26,10 +26,21 @@ workflow NF_GWAS {
         println ANSI_YELLOW + "WARN: Option genotypes_imputed_format is deprecated. Please use genotypes_association_format instead." + ANSI_RESET
     } 
 
-    def genotypes_prediction = params.genotypes_prediction
-    if(params.genotypes_array){
+    // Handle genotype prediction files - prefer new individual parameters
+    def genotypes_prediction = null
+    def useNewFormat = params.genotypes_prediction_bed != null && 
+                       params.genotypes_prediction_bim != null && 
+                       params.genotypes_prediction_fam != null
+    
+    if (useNewFormat) {
+        // Create a list with the individual files in the expected order [bed, bim, fam]
+        genotypes_prediction = [params.genotypes_prediction_bed, params.genotypes_prediction_bim, params.genotypes_prediction_fam]
+    } else if (params.genotypes_prediction != null) {
+        genotypes_prediction = params.genotypes_prediction
+        println ANSI_YELLOW +  "WARN: Option genotypes_prediction is deprecated. Please use genotypes_prediction_bed, genotypes_prediction_bim, and genotypes_prediction_fam instead." + ANSI_RESET
+    } else if (params.genotypes_array != null) {
         genotypes_prediction = params.genotypes_array
-        println ANSI_YELLOW +  "WARN: Option genotypes_array is deprecated. Please use genotypes_prediction instead." + ANSI_RESET
+        println ANSI_YELLOW +  "WARN: Option genotypes_array is deprecated. Please use genotypes_prediction_bed, genotypes_prediction_bim, and genotypes_prediction_fam instead." + ANSI_RESET
     }
 
     def association_build = params.association_build
@@ -62,18 +73,30 @@ workflow NF_GWAS {
     genotyped_plink_ch = Channel.empty()
     if(!skip_predictions) {
         
-        def paths = genotypes_prediction.collect { file(it) }
+        def paths
+        if (useNewFormat) {
+            // For new format, we already have the individual files in correct order
+            paths = genotypes_prediction.collect { file(it) }
+        } else {
+            // For legacy format, use the glob pattern expansion
+            paths = genotypes_prediction.collect { file(it) }
+        }
 
         // Find any of the files to extract the base name
         // We can iterate through the paths and pick the first one that has a .fam, .bim, or .bed extension
         def base_file = paths.find { it.getName().endsWith('.fam') || it.getName().endsWith('.bim') || it.getName().endsWith('.bed') }
 
         if (!base_file) {
-            error "Could not find a .fam, .bim, or .bed file in the provided genotypes_prediction array to extract the base name."
+            error "Could not find a .fam, .bim, or .bed file in the provided genotypes prediction files to extract the base name."
         }
         // Extract the ID (e.g., "EUR") from the chosen base_file
         // This regex will remove .fam, .bim, or .bed from the end of the filename
         def id = base_file.getName().replaceFirst(/\.(fam|bim|bed)$/, '')
+
+        // Ensure we have exactly 3 files for PLINK format
+        if (paths.size() != 3) {
+            error "Expected exactly 3 PLINK files (BED, BIM, FAM), but got ${paths.size()} files."
+        }
 
         genotyped_plink_ch = Channel.of(
             tuple(id,

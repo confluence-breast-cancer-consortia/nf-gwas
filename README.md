@@ -42,6 +42,25 @@ nextflow run genepi/nf-gwas -c <nextflow.config> -r v1.0.9 -profile <docker,sing
 
 Please click [here](tests) for available test config files.
 
+### New Parameter Format (Recommended)
+
+Starting from this version, you can specify individual PLINK files using separate parameters:
+
+```bash
+nextflow run genepi/nf-gwas \
+  --genotypes_prediction_bed /path/to/genotypes.bed \
+  --genotypes_prediction_bim /path/to/genotypes.bim \
+  --genotypes_prediction_fam /path/to/genotypes.fam \
+  --genotypes_association /path/to/association.vcf.gz \
+  --association_build hg19 \
+  --genotypes_association_format vcf \
+  --phenotypes_filename /path/to/phenotypes.txt \
+  --phenotypes_columns "Y1,Y2" \
+  --regenie_test additive
+```
+
+The legacy `genotypes_prediction` parameter using glob patterns is still supported but deprecated.
+
 ## Development
 
 ```
