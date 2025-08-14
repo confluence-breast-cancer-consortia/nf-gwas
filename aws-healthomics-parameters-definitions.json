@@ -3,8 +3,16 @@
 		"description": "s3://nci-tdrp-healthomics/data/metadata/sim_pheno_chr22_EUR_pheno.txt",
 		"optional": false
 	},
-	"genotypes_prediction": {
-		"description": "Array of PLINK genotype files (bed, bim, fam)",
+	"genotypes_prediction_bed": {
+		"description": "s3://nci-tdrp-healthomics/data/simulatedData600k_Zhang2022/data_hapmap3_only/EUR.bed",
+		"optional": false
+	},
+	"genotypes_prediction_bim": {
+		"description": "s3://nci-tdrp-healthomics/data/simulatedData600k_Zhang2022/data_hapmap3_only/EUR.bim",
+		"optional": false
+	},
+	"genotypes_prediction_fam": {
+		"description": "s3://nci-tdrp-healthomics/data/simulatedData600k_Zhang2022/data_hapmap3_only/EUR.fam",
 		"optional": false
 	},
 	"regenie_test": {
@@ -61,6 +69,10 @@
 	},
 	"association_build": {
 		"description": "hg38",
+		"optional": false
+	},
+	"container": {
+		"description": "222634394918.dkr.ecr.us-east-1.amazonaws.com/nf-gwas-v1.0.9",
 		"optional": false
 	}
 }
