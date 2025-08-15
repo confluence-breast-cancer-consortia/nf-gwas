@@ -1,5 +1,10 @@
 # nf-gwas
 
+
+**Note:** This fork has been adapted for use with AWS HealthOmics and DNAnexus, including parameter adjustments and added support for a parameters file.
+
+---
+
 [![nf-gwas](https://github.com/genepi/nf-gwas/actions/workflows/ci-tests.yml/badge.svg)](https://github.com/genepi/nf-gwas/actions/workflows/ci-tests.yml)
 [![nf-test](https://img.shields.io/badge/tested_with-nf--test-337ab7.svg)](https://github.com/askimed/nf-test)
 
