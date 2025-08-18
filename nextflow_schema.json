@@ -58,9 +58,27 @@
           "description": "Comma-separated list of phenotypes",
           "fa_icon": "fas fa-project-diagram"
         },
+        "genotypes_prediction_bed": {
+          "type": "string",
+          "format": "file-path",
+          "description": "Path to the BED file for genomic predictions (PLINK binary format)",
+          "fa_icon": "fas fa-project-diagram"
+        },
+        "genotypes_prediction_bim": {
+          "type": "string",
+          "format": "file-path", 
+          "description": "Path to the BIM file for genomic predictions (PLINK variant information)",
+          "fa_icon": "fas fa-project-diagram"
+        },
+        "genotypes_prediction_fam": {
+          "type": "string",
+          "format": "file-path",
+          "description": "Path to the FAM file for genomic predictions (PLINK sample information)",
+          "fa_icon": "fas fa-project-diagram"
+        },
         "genotypes_prediction": {
-          "type": "array",
-          "description": "Path to the genomic predictions (e.g. array genotypes) as a merged file in plink format).",
+          "type": "string",
+          "description": "[DEPRECATED] Use genotypes_prediction_bed/bim/fam instead. Path to the genomic predictions as a glob pattern.",
           "fa_icon": "fas fa-project-diagram"
         },
         "phenotypes_binary_trait": {

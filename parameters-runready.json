@@ -1,0 +1,22 @@
+{
+  "phenotypes_filename": "s3://nci-tdrp-healthomics/data/metadata/sim_pheno_chr22_EUR_pheno.txt",
+  "genotypes_prediction_bed": "s3://nci-tdrp-healthomics/data/simulatedData600k_Zhang2022/data_hapmap3_only/EUR.bed",
+  "genotypes_prediction_bim": "s3://nci-tdrp-healthomics/data/simulatedData600k_Zhang2022/data_hapmap3_only/EUR.bim",
+  "genotypes_prediction_fam": "s3://nci-tdrp-healthomics/data/simulatedData600k_Zhang2022/data_hapmap3_only/EUR.fam",
+  "regenie_test": "additive",
+  "vcf_conversion_split_id": true,
+  "rsids_filename": "s3://nci-tdrp-healthomics/data/annotations/rsids-v154-hg38.index.gz",
+  "project": "nf-gwas-sim",
+  "genotypes_association": "s3://nci-tdrp-healthomics/data/simulatedData600k_Zhang2022/bgen/all_chr.tag_chr*.bgen",
+  "phenotypes_binary_trait": true,
+  "prune_enabled": true,
+  "annotation_min_log10p": 2,
+  "phenotypes_columns": "sim",
+  "regenie_step1_optional": " --loocv ",
+  "phenotypes_delete_missings": true,
+  "genotypes_association_format": "bgen",
+  "prune_maf": 0.05,
+  "association_build": "hg38",
+  "container": "quay.io/genepi/nf-gwas:v1.0.9"
+}
+

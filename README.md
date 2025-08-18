@@ -1,5 +1,13 @@
 # nf-gwas
 
+
+**Note:** This fork has been specifically adapted for use with AWS HealthOmics and DNAnexus. We have modified certain input parameters to clarify file paths and included parameter definitions that are compatible with HealthOmics.
+
+* `aws-healthomics-parameters-definitions.json`: Defines parameters for creating a new workflow in HealthOmics, including descriptions for each parameter.  
+* `parameters-runready.json`: An example JSON that provides actual input values when running a workflow in HealthOmics or another platform.  
+
+---
+
 [![nf-gwas](https://github.com/genepi/nf-gwas/actions/workflows/ci-tests.yml/badge.svg)](https://github.com/genepi/nf-gwas/actions/workflows/ci-tests.yml)
 [![nf-test](https://img.shields.io/badge/tested_with-nf--test-337ab7.svg)](https://github.com/askimed/nf-test)
 
@@ -41,6 +49,25 @@ nextflow run genepi/nf-gwas -c <nextflow.config> -r v1.0.9 -profile <docker,sing
 ```
 
 Please click [here](tests) for available test config files.
+
+### New Parameter Format (Recommended)
+
+Starting from this version, you can specify individual PLINK files using separate parameters:
+
+```bash
+nextflow run genepi/nf-gwas \
+  --genotypes_prediction_bed /path/to/genotypes.bed \
+  --genotypes_prediction_bim /path/to/genotypes.bim \
+  --genotypes_prediction_fam /path/to/genotypes.fam \
+  --genotypes_association /path/to/association.vcf.gz \
+  --association_build hg19 \
+  --genotypes_association_format vcf \
+  --phenotypes_filename /path/to/phenotypes.txt \
+  --phenotypes_columns "Y1,Y2" \
+  --regenie_test additive
+```
+
+The legacy `genotypes_prediction` parameter using glob patterns is still supported but deprecated.
 
 ## Development
 
