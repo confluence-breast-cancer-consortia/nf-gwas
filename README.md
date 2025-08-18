@@ -1,7 +1,10 @@
 # nf-gwas
 
 
-**Note:** This fork has been adapted for use with AWS HealthOmics and DNAnexus, including parameter adjustments and added support for a parameters file.
+**Note:** This fork has been specifically adapted for use with AWS HealthOmics and DNAnexus. We have modified certain input parameters to clarify file paths and included parameter definitions that are compatible with HealthOmics.
+
+* `aws-healthomics-parameters-definitions.json`: Defines parameters for creating a new workflow in HealthOmics, including descriptions for each parameter.  
+* `parameters-runready.json`: An example JSON that provides actual input values when running a workflow in HealthOmics or another platform.  
 
 ---
 
