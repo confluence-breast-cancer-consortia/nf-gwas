@@ -13,6 +13,7 @@ process PRUNE_GENOTYPED {
     # Prune, filter and convert to plink
     plink2 \
         --bfile ${genotyped_qc_filename} \
+        --chr 1-22 \
         --double-id --maf ${params.prune_maf} \
         --indep-pairwise ${params.prune_window_kbsize} ${params.prune_step_size} ${params.prune_r2_threshold} \
         --out ${genotyped_qc_filename} \
@@ -20,6 +21,7 @@ process PRUNE_GENOTYPED {
         --memory ${task.memory.toMega()}
     plink2 \
         --bfile ${genotyped_qc_filename} \
+        --chr 1-22 \
         --extract ${genotyped_qc_filename}.prune.in \
         --double-id \
         --make-bed \
