@@ -4,6 +4,7 @@ process QC_FILTER_GENOTYPED {
 
     input:
     tuple val(genotyped_plink_filename), path(genotyped_plink_file)
+    path phenotypes_file_validated
 
     output:
     path "${genotyped_plink_filename}.qc.log"
@@ -13,8 +14,12 @@ process QC_FILTER_GENOTYPED {
 
 
     """
+    # Extract sample IDs from validated phenotype file
+    awk 'NR > 1 {print \$1, \$2}' ${phenotypes_file_validated} > ${genotyped_plink_filename}.keep_samples
+    
     plink2 \
         --bfile ${genotyped_plink_filename} \
+        --keep ${genotyped_plink_filename}.keep_samples \
         --maf ${params.qc_maf} \
         --mac ${params.qc_mac} \
         --geno ${params.qc_geno} \
