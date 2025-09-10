@@ -6,7 +6,7 @@ process REGENIE_STEP2_RUN {
 
     input:
 	  path step1_out
-    tuple val(filename), path(plink2_pgen_file), path(plink2_psam_file), path(plink2_pvar_file), val(range)
+    tuple val(filename), path(plink2_pgen_file), path(plink2_psam_file), path(plink2_pvar_file), val(range), path(bgi_file)
     val assoc_format
     path phenotypes_file
     path sample_file
@@ -22,6 +22,7 @@ process REGENIE_STEP2_RUN {
     script:
     def format = assoc_format == 'bgen' ? "--bgen" : '--pgen'
     def extension = assoc_format == 'bgen' ? ".bgen" : ''
+    def bgi_param = (assoc_format == 'bgen' && bgi_file && bgi_file.name != 'NO_FILE') ? "--bgi ${bgi_file}" : ''
     def bgen_sample = sample_file ? "--sample $sample_file" : ''
     def test = "--test $params.regenie_test"
     def firthApprox = params.regenie_firth_approx ? "--approx" : ""
@@ -50,6 +51,7 @@ process REGENIE_STEP2_RUN {
     regenie \
         --step 2 \
         $format ${filename}${extension} \
+        $bgi_param \
         --phenoFile ${phenotypes_file} \
         --phenoColList  ${params.phenotypes_columns} \
         --bsize ${params.regenie_bsize_step2} \

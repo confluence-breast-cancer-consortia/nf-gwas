@@ -19,9 +19,33 @@ workflow REGENIE_STEP2 {
         sample_file = file(params.regenie_sample_file, checkIfExists: true)
     }
 
+    // Add BGI file handling for BGEN format
+    imputed_plink2_ch
+        .map { filename, file1, file2, file3, range ->
+            def bgi_file = null
+            
+            if (genotypes_association_format == 'bgen') {
+                // Check if file2 is already a BGI file (from chunking)
+                if (file2 && file2.toString().endsWith('.bgi')) {
+                    bgi_file = file2
+                } 
+                // Check if file2 is an empty list (no chunking case)
+                else if (!file2 || file2.toString() == '[]') {
+                    // Construct BGI from BGEN filename
+                    def potential_bgi = file("${file1}.bgi")
+                    bgi_file = potential_bgi.exists() ? potential_bgi : file('NO_FILE')
+                }
+            } else {
+                bgi_file = file('NO_FILE')
+            }
+            
+            tuple(filename, file1, file2, file3, range, bgi_file)
+        }
+        .set { regenie_input_with_bgi }
+
     REGENIE_STEP2_RUN (
         regenie_step1_out_ch.collect(),
-        imputed_plink2_ch,
+        regenie_input_with_bgi,
         genotypes_association_format,
         phenotypes_file_validated,
         sample_file,
