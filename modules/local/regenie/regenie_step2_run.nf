@@ -22,7 +22,7 @@ process REGENIE_STEP2_RUN {
     script:
     def format = assoc_format == 'bgen' ? "--bgen" : '--pgen'
     def extension = assoc_format == 'bgen' ? ".bgen" : ''
-    def bgi_param = (assoc_format == 'bgen' && bgi_file && bgi_file.name != 'NO_FILE') ? "--bgi ${bgi_file}" : ''
+    def bgi_param = (assoc_format == 'bgen') ? "--bgi ${filename}.bgen.bgi" : ''
     def bgen_sample = sample_file ? "--sample $sample_file" : ''
     def test = "--test $params.regenie_test"
     def firthApprox = params.regenie_firth_approx ? "--approx" : ""
@@ -48,6 +48,12 @@ process REGENIE_STEP2_RUN {
     def step2_optional = params.regenie_step2_optional  ? "$params.regenie_step2_optional":'' 
 
     """
+    # Create .bgi index if using BGEN format and index doesn't exist
+    if [[ "$format" == "--bgen" && ! -f "${filename}.bgen.bgi" ]]; then
+        echo "Creating BGI index for ${filename}.bgen"
+        bgenix -index -g ${filename}.bgen
+    fi
+
     regenie \
         --step 2 \
         $format ${filename}${extension} \
