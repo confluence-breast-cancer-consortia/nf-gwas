@@ -6,7 +6,7 @@ process REGENIE_STEP2_RUN {
 
     input:
 	  path step1_out
-    tuple val(filename), path(plink2_pgen_file), path(plink2_psam_file), path(plink2_pvar_file), val(range), path(bgi_file)
+    tuple val(filename), path(plink2_pgen_file), path(plink2_psam_file), path(plink2_pvar_file), val(range)
     val assoc_format
     path phenotypes_file
     path sample_file
@@ -48,8 +48,8 @@ process REGENIE_STEP2_RUN {
     def step2_optional = params.regenie_step2_optional  ? "$params.regenie_step2_optional":'' 
 
     """
-    # Create .bgi index if using BGEN format and index doesn't exist
-    if [[ "$format" == "--bgen" && ! -f "${filename}.bgen.bgi" ]]; then
+    # Create .bgi index if using BGEN format
+    if [[ "$format" == "--bgen" ]]; then
         echo "Creating BGI index for ${filename}.bgen"
         bgenix -index -g ${filename}.bgen
     fi
