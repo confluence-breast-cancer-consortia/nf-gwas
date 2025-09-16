@@ -22,6 +22,7 @@ process REGENIE_STEP2_RUN {
     script:
     def format = assoc_format == 'bgen' ? "--bgen" : '--pgen'
     def extension = assoc_format == 'bgen' ? ".bgen" : ''
+    def bgi_param = (assoc_format == 'bgen') ? "--bgi ${filename}.bgen.bgi" : ''
     def bgen_sample = sample_file ? "--sample $sample_file" : ''
     def test = "--test $params.regenie_test"
     def firthApprox = params.regenie_firth_approx ? "--approx" : ""
@@ -47,9 +48,16 @@ process REGENIE_STEP2_RUN {
     def step2_optional = params.regenie_step2_optional  ? "$params.regenie_step2_optional":'' 
 
     """
+    # Create .bgi index if using BGEN format
+    if [[ "$format" == "--bgen" ]]; then
+        echo "Creating BGI index for ${filename}.bgen"
+        bgenix -index -g ${filename}.bgen
+    fi
+
     regenie \
         --step 2 \
         $format ${filename}${extension} \
+        $bgi_param \
         --phenoFile ${phenotypes_file} \
         --phenoColList  ${params.phenotypes_columns} \
         --bsize ${params.regenie_bsize_step2} \
